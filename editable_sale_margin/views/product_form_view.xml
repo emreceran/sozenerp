@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="product_form_inherit_view">
+        <field name="name">product.template.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="adamsaat">Adam/Saat</field>
+            </xpath>
+
+        </field>
+    </record>
+
+
+
+
+    <record model="ir.ui.view" id="sale_order_line_adamsaatr">
+        <field name="name">sale.order.line.adamsaat.view.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree//field[@name='price_subtotal']" position="before">
+                    <field name="adamsaat_subtotal" groups="base.group_user" />
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="sale_adamsaat_sale_order">
+        <field name="name">sale.order.adamsaat.view.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_margin.sale_margin_sale_order"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='text-nowrap']" position="after">
+<!--<xpath expr="//field[@name='order_line']/tree//field[@name='price_subtotal']" position="after">-->
+
+                <div class="text-nowrap" groups="base.group_user">
+
+                    <span>
+                        Adam/Saat Maliyet:  <field name="toplam_adamsaat" nolabel="1" />
+                    </span>
+                </div>
+                <br />
+
+                <div class="text-nowrap" groups="base.group_user">
+
+                    <span>
+                        Malzeme Marj: <field name="malzeme_margin" nolabel="1" />
+                    </span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+
+    </odoo>
