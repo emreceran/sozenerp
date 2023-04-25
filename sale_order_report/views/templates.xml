@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend_custom" name="sale_order_report_assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" type="text/scss" href="./static/src/css/style.css"/>
+            </xpath>
+        </template>
+    </data>
+
+<!-- <link rel="stylesheet" type="text/scss" href="/base_accounting_kit/static/src/scss/style.scss"/>&ndash;&gt;-->
+
+</odoo>

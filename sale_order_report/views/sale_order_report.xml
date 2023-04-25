@@ -1,0 +1,911 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="sale_order_report_customized_header">
+            <div class="header">
+                <div class="o_clean_header">
+                    <div class="row" style="font-family:'Roboto',sans-serif">
+                        <div class="col-5" name="company_address" style="text-align:right;">
+                            <img src="/sale_order_report/static/description/siemens_logo.jpg"/>
+                        </div>
+
+                        <div class="col-7">
+                            <img t-if="res_company.logo" t-att-src="image_data_uri(res_company.logo)" alt="Logo"
+                                 style="margin-left:20px; height:125px"/>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+        </template>
+        <template id="sale_order_report_customized_footer">
+            <div class="footer">
+
+
+            </div>
+        </template>
+
+        <template id="report_sale_order_template">
+
+            <t t-call="web.html_container">
+                <t t-call="sale_order_report.sale_order_report_customized_header"/>
+                <!--                <t t-call="sale_order_report.sale_order_report_customized_footer"/>-->
+                <t t-foreach="docs" t-as="doc">
+                    <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
+                    <t t-call="web.internal_layout">
+
+                        <t t-set="forced_vat" t-value="doc.fiscal_position_id.foreign_vat"/> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
+                        <t t-set="address">
+                            <div t-field="doc.partner_id"
+                                 t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                            <p t-if="doc.partner_id.vat"><t t-out="doc.company_id.account_fiscal_country_id.vat_label or 'Tax ID'"/>: <span t-field="doc.partner_id.vat"/></p>
+                        </t>
+
+                        <div class="page text-dark"
+                             style="font-family:'Roboto',sans-serif;font-size:15px;margin-top:25px;">
+
+                            <div class="row" style="font-family:'Roboto',sans-serif">
+                                <div class="col-5">
+                                </div>
+                                <div class="col-7" name="company_address" >
+                                    <h5 style="font-size:20px; text-align:left; margin-left:20px    ">
+                                        <t t-out="doc.satis_siprais_basligi "  />
+                                    </h5>
+                                </div>
+                            </div>
+
+                            <hr style="height:2px;border-width:0;color:gray;background-color:gray"></hr>
+
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2">ALICI / TO</th>
+                                        <th colspan="2">GÖNDEREN / FROM</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Firma / Company: </td>
+                                        <td><t t-esc="doc.partner_id.name"/></td>
+                                        <td>Firma / Company:</td>
+                                        <td><span t-field="res_company.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td> İsim / Name: </td>
+                                        <td> <t t-esc="doc.partner_id.name"/> </td>
+                                        <td> İsim / Name: </td>
+                                        <td>  <t t-esc="doc.user_id.name"/> </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td> Eposta / Email: </td>
+                                        <td> <t t-esc="doc.partner_id.email"/> </td>
+                                        <td> Eposta / Email: </td>
+                                        <td>  <t t-esc="doc.user_id.email"/> </td>
+                                    </tr>
+
+
+
+
+                                    <tr>
+                                        <td> <b>Yer / Location:</b> </td>
+                                        <td>
+                                            <span t-esc="doc.partner_id.street"/> <br/>
+                                            <span t-esc="doc.partner_id.street2"/> <br/>
+                                            <span t-esc="doc.partner_id.city"/> / <span class="text-uppercase" t-esc="doc.partner_id.state_id.name"/> <br/>
+                                            <span t-esc="doc.partner_id.zip"/>
+
+                                        </td>
+                                        <td>
+                                            <b>Adres / Address:</b>
+                                        </td>
+                                        <td>
+
+                                                    <span t-field="res_company.street"/>    <br/>
+                                                    <span t-field="res_company.street2"/>     <br/>
+                                                    <span t-field="res_company.city"/> / <span t-field="res_company.state_id.name"/>
+
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td> Referans / Our Ref. </td>
+                                        <td> <t t-esc="doc.name"/> </td>
+                                        <td>  </td>
+                                        <td>   </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>  <b>Tarih / Date:</b> </td>
+                                        <td>  <span t-field="doc.date_order" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/> </td>
+                                        <td>  </td>
+                                        <td>   </td>
+                                    </tr>
+
+
+
+                                </tbody>
+                            </table>
+
+                            <!--                            <div class="row col-12" style="margin-top:25px;">-->
+                            <!--&lt;!&ndash;-->
+                            <!--                            <br/>-->
+                            <!--                            &lt;!&ndash;                            <div class="row col-12">&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;&lt;!&ndash;                                <div class="row col-6">&ndash;&gt;&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;&lt;!&ndash;                                    <div class="col-4">&ndash;&gt;&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;&lt;!&ndash;                                        <b>Telefon / Telephone:</b>&ndash;&gt;&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;&lt;!&ndash;                                    </div>&ndash;&gt;&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;&lt;!&ndash;                                    <div class="col-8">&ndash;&gt;&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;&lt;!&ndash;                                        <t t-esc="doc.partner_id.phone"/>&ndash;&gt;&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;&lt;!&ndash;                                    </div>&ndash;&gt;&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;&lt;!&ndash;                                </div>&ndash;&gt;&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;&lt;!&ndash;                                <div class="row col-6">&ndash;&gt;&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;&lt;!&ndash;                                    <div class="col-4">&ndash;&gt;&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;&lt;!&ndash;                                        <b>Telefon / Telephone:</b>&ndash;&gt;&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;&lt;!&ndash;                                    </div>&ndash;&gt;&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;&lt;!&ndash;                                    <div class="col-8">&ndash;&gt;&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;&lt;!&ndash;                                        <span t-field="res_company.phone"/>&ndash;&gt;&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;&lt;!&ndash;                                    </div>&ndash;&gt;&ndash;&gt;-->
+                            <!--                            &lt;!&ndash;&lt;!&ndash;                                </div>&ndash;&gt;&ndash;&gt;-->
+                            <!--                                                        </div>-->
+                            <!--                            <br/>-->
+                            <!--                            <div class="row col-12">-->
+                            <!--                                &lt;!&ndash;                                <div class="row col-6">&ndash;&gt;-->
+                            <!--                                &lt;!&ndash;                                    <div class="col-4">&ndash;&gt;-->
+                            <!--                                &lt;!&ndash;                                        &lt;!&ndash;                                        <b>Faks / Fax:</b>&ndash;&gt;&ndash;&gt;-->
+                            <!--                                &lt;!&ndash;                                    </div>&ndash;&gt;-->
+                            <!--                                &lt;!&ndash;                                </div>&ndash;&gt;-->
+                            <!--                                <div class="row col-6">-->
+                            <!--                                    <div class="col-4">-->
+                            <!--                                        <b>Referans / Our Ref.</b>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div class="col-4">-->
+                            <!--                                        <t t-esc="doc.name"/>-->
+                            <!--                                    </div>-->
+                            <!--                                </div>-->
+                            <!--                            </div>-->
+                            <!--                            <br/>-->
+                            <!--                            <div class="row col-12">-->
+                            <!--                                &lt;!&ndash;                                <div class="row col-6">&ndash;&gt;-->
+                            <!--                                &lt;!&ndash;                                    <div class="col-4">&ndash;&gt;-->
+                            <!--                                &lt;!&ndash;                                        <b>Faks / Fax:</b>&ndash;&gt;-->
+                            <!--                                &lt;!&ndash;                                    </div>&ndash;&gt;-->
+                            <!--                                &lt;!&ndash;                                </div>&ndash;&gt;-->
+                            <!--                                <div class="row col-6">-->
+                            <!--                                    <div class="col-4">-->
+                            <!--                                        <b>Tarih / Date:</b>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div class="col-8">-->
+                            <!--                                        <span t-field="doc.date_order" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/>-->
+                            <!--                                    </div>-->
+                            <!--                                </div>-->
+                            <!--                            </div>-->
+                            <!--                            <br/>-->
+                            <!--                            <br/>-->
+                            <div class="row col-12">
+                                <div class="col-12">
+                                    <b>
+                                        KONU / SUBJECT
+                                    </b>
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <div class="row col-12">
+                                <div class="col-12 d-flex">
+                                    <h4>
+                                        Sayın
+                                    </h4>
+                                    <h4 style="margin-left:10px" t-esc="doc.partner_id.name"/>
+
+
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row col-12">
+                                <div class="col-12 "
+                                     style="margin-left:10px; margin-right:10px; font-family:'Roboto',sans-serif;font-size:14px;">
+                                    <span t-field="doc.proje_adi" /> projesine ilişkin teklifimiz
+                                    ekte bilgilerinize sunulmuştur. Konuda adı geçen iş  için
+                                    teklif sayfasında verilen fiyatlarımız yine ekte sunulan malzeme listesi, teknik ve
+                                    ticari açıklamalar ile geçerli olup, teklifimizin tarafınızca olumlu karşılanacağını
+                                    umar, çalışmalarınızın devamını dileriz.
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div class="row col-12">
+                                <div class="col-12">
+                                    <b>
+                                        Saygılarımızla,
+                                    </b>
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+
+                            <div class="row col-12">
+                                <div class="col-12">
+                                    <b>
+                                        MES MÜHENDİSLİK ELEKTRİK PROJE VE KONTROL SİSTEMLERİ
+                                    </b>
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div class="row col-12" style="margin-top:5px;">
+                                <h5>
+                                    <span>
+                                        Müşteri Onayı:
+                                    </span>
+                                    <b>
+                                        Teklifimizi kabul ettiyseniz onaylayarak geri yollayınız
+                                    </b>
+                                </h5>
+                            </div>
+                            <div style="border:1px solid; padding:10px;">
+
+                                <div class="row col-12">
+                                    <div class="col-12">
+                                        MES MÜHENDİSLİK ELEKTRİK ELEKTRONİK PROJE VE KON. SİSTEMLERİ
+                                    </div>
+                                </div>
+                                <div class="row col-12">
+                                    <div class="col-12">
+                                        tarafından yukarıda belirtilen şartlarda siparişini onaylıyorum.
+                                    </div>
+                                </div>
+                                <div class="row col-12" style="margin-top:10px;">
+                                    <div class="col-4">
+                                        Onaylayan Kişi
+                                    </div>
+                                    <div class="col-4"/>
+                                    <div class="col-4">
+                                        Kaşe \ İmza
+                                    </div>
+                                </div>
+
+                                <br/>
+                                <br/>
+                                <div class="row col-12">
+                                    <div class="col-4">
+                                        Onay Tarihi
+                                    </div>
+                                    <div class="col-4"/>
+                                    <div class="col-4">
+                                        Adı Soyad
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="row col-12" >
+                                    <div class="col-12">
+                                        Lütfen İmza Sirkünüzü sipariş onayı ekinde gönderiniz.
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="page-break-after:always"></p>
+                            <t t-call="sale_order_report.sale_order_report_customized_header"/>
+
+                            <div class="row col-12">
+                                <div class="col-12">
+                                    <b>
+                                        TİCARİ AÇIKLAMALAR
+                                    </b>
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div class="row">
+                                <div class="col-12">
+                                    <table class="table table-bordered table-sm">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <b>KAPSAM</b>
+                                                </td>
+                                                <td class="text-left p-2">
+                                                    <span t-field="doc.kapsam" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <b>Fiyatlarımıza DAHİL OLAN hizmetler ve malzemeler:</b>
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td class = "text-center">
+                                                    <b>-</b>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.dahil1" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class = "text-center">
+                                                    <b>-</b>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.dahil2" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class = "text-center">
+                                                    <b>-</b>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.dahil3" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class = "text-center">
+                                                    <b>-</b>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.dahil4" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class = "text-center">
+                                                    <b >-</b>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.dahil5" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class = "text-center">
+                                                    <b>-</b>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.dahil6" />
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td colspan="2">
+                                                    <b>Fiyatlarımıza DAHİL OLMAYAN hizmetler ve malzemeler:</b>
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td class = "text-center">
+                                                    <b>-</b>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.haric1" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class = "text-center">
+                                                    <b>-</b>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.haric2" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class = "text-center">
+                                                    <b>-</b>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.haric3" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class = "text-center">
+                                                    <b>-</b>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.haric4" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class = "text-center">
+                                                    <b>-</b>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.haric5" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class = "text-center">
+                                                    <b>-</b>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.haric6" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class = "text-center">
+                                                    <b>-</b>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.haric7" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class = "text-center">
+                                                    <b>-</b>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.haric8" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class = "text-center">
+                                                    <b>-</b>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.haric9" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class = "text-center">
+                                                    <b>-</b>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.haric10" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class = "text-center">
+                                                    <b>-</b>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.haric11" />
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <b>OPSİYON</b>
+                                                </td>
+                                                <td class="text-left p-2">
+                                                    <span t-field="doc.opsiyon" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b>TESLİM YERİ</b>
+                                                </td>
+                                                <td class="text-left p-2">
+                                                    <span t-field="doc.teslim_yeri" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b>TESLİM SÜRESİ</b>
+                                                </td>
+                                                <td class="text-left p-2">
+                                                    <span t-field="doc.teslim_suresi" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b>FATURA</b>
+                                                </td>
+                                                <td class="text-left p-2">
+                                                    <span t-field="doc.fatura" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b>AVANS VE ÖDEME ŞARTLARI</b>
+                                                </td>
+                                                <td class="text-left p-2">
+                                                    <span t-field="doc.avans_ve_sartlar" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b>GARANTİ</b>
+                                                </td>
+                                                <td class="text-left p-2">
+                                                    <span t-field="doc.garanti" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b>FORCE MAJOR</b>
+                                                </td>
+                                                <td class="text-left p-2">
+                                                    <span t-field="doc.force_major" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b>VERGİ MEVZUATI</b>
+                                                </td>
+                                                <td class="text-left p-2">
+                                                    <span t-field="doc.vergi_mevzuat" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b>MUKAVELE VE TEMİNAT MASRAFLARI</b>
+                                                </td>
+                                                <td class="text-left p-2">
+                                                    <span t-field="doc.mukavele" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b>DOLAYLI ZARARLAR</b>
+                                                </td>
+                                                <td class="text-left p-2">
+                                                    <span t-field="doc.dolayli_zarar" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b>SORUMLULUK</b>
+                                                </td>
+                                                <td class="text-left p-2">
+                                                    <span t-field="doc.sorumluluk" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b>İHTİLAFLAR</b>
+                                                </td>
+                                                <td class="text-left p-2">
+                                                    <span t-field="doc.ihtilaflar" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row col-12" style="margin-top:5px;">
+                                <h5>
+                                    <span>
+                                        Müşteri Onayı:
+                                    </span>
+                                    <b>
+                                        Teklifimizi kabul ettiyseniz onaylayarak geri yollayınız
+                                    </b>
+                                </h5>
+                            </div>
+                            <div style="border:1px solid; margin-top:10px; padding:10px">
+
+                                <div class="row col-12">
+                                    <div class="col-12">
+                                        MES MÜHENDİSLİK ELEKTRİK ELEKTRONİK PROJE VE KON. SİSTEMLERİ
+                                    </div>
+                                </div>
+                                <div class="row col-12">
+                                    <div class="col-12">
+                                        tarafından yukarıda belirtilen şartlarda siparişini onaylıyorum.
+                                    </div>
+                                </div>
+                                <div class="row col-12" style="margin-top:10px;">
+                                    <div class="col-4">
+                                        Onaylayan Kişi
+                                    </div>
+                                    <div class="col-4"/>
+                                    <div class="col-4">
+                                        Kaşe \ İmza
+                                    </div>
+                                </div>
+
+                                <br/>
+                                <br/>
+                                <div class="row col-12">
+                                    <div class="col-4">
+                                        Onay Tarihi
+                                    </div>
+                                    <div class="col-4"/>
+                                    <div class="col-4">
+                                        Adı Soyad
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="row col-12" >
+                                    <div class="col-12">
+                                        Lütfen İmza Sirkünüzü sipariş onayı ekinde gönderiniz.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p style="page-break-after:always"></p>
+
+
+                            <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
+                            <t t-set="display_discount" t-value="any(l.discount for l in lines_to_report)"/>
+
+                            <table class="table table-sm o_main_table mt-4">
+                                <!-- In case we want to repeat the header, remove "display: table-row-group" -->
+                                <thead style="display: table-row-group">
+
+                                    <tr style="background-color:#191970;color:white">
+                                        <th name="th_sequence" class="col-1 text-center">Sr.No</th>
+                                        <th name="th_name" class="col-2 text-center">Sipariş No</th>
+                                        <th name="th_description" class="col-5 text-center">Açıklama</th>
+                                        <th name="th_quantity" class="col-1 text-center">Miktar</th>
+                                        <th name="th_priceunit" class="col-1 text-center">Birim Fiyat</th>
+                                        <th name="th_discount" t-if="display_discount" class="col-1 text-center" groups="product.group_discount_per_so_line">
+                                            <span>İndirim .%</span>
+                                        </th>
+                                        <!--                        <th name="th_taxes" class="text-end">Taxes</th>-->
+                                        <th name="th_subtotal" class="col-2 text-center">
+                                            <span >Toplam Fiyat</span>
+                                            <!--                                            <span groups="account.group_show_line_subtotals_tax_excluded">Toplam Fiyat</span>-->
+                                            <!--                                            <span groups="account.group_show_line_subtotals_tax_included">Toplam Fiyat </span>-->
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="sale_tbody">
+
+                                    <t t-set="current_subtotal" t-value="0"/>
+                                    <t t-set="sira" t-value="1"/>
+
+                                    <t t-foreach="lines_to_report" t-as="line">
+
+                                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" />
+                                        <!--                                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>-->
+                                        <!--                                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>-->
+
+                                        <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
+                                            <t t-if="not line.display_type">
+                                                <td ><t t-esc="sira"/></td>
+                                                <!--                                                <td name="td_sequence" class="text-center"><span t-esc="sira"/></td>-->
+
+
+
+
+
+                                                <td name="td_name" class="text-center"><span t-field="line.product_template_id"/></td>
+                                                <td name="td_description" class="text-center"><span t-field="line.product_id.description_sale"/></td>
+
+                                                <td name="td_quantity" class="text-center">
+                                                    <span t-field="line.product_uom_qty"/>
+                                                    <span t-field="line.product_uom"/>
+                                                </td>
+                                                <td name="td_priceunit" class="text-center">
+                                                    <span t-field="line.price_unit"
+                                                          t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}' />
+                                                </td>
+                                                <td t-if="display_discount" class="text-center" >
+                                                    <!--                                                <td t-if="display_discount" class="text-center" groups="product.group_discount_per_so_line">-->
+                                                    <span t-field="line.discount"/>
+                                                </td>
+                                                <!--                                <td name="td_taxes" class="text-end">-->
+                                                <!--                                    <span t-out="', '.join(map(lambda x: (x.description or x.name), line.tax_id))"/>-->
+                                                <!--                                </td>-->
+                                                <td t-if="not line.is_downpayment" name="td_subtotal" class="text-center o_price_total">
+                                                    <span t-field="line.price_subtotal" />
+                                                    <!--                                                    <span t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>-->
+                                                    <!--                                                    <span t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/>-->
+                                                </td>
+                                                <t t-set="sira" t-value="sira+1"/>
+
+                                            </t>
+                                            <t t-elif="line.display_type == 'line_section'">
+                                                <t t-set="sira" t-value="sira"/>
+                                                <td name="td_section_line" colspan="99">
+                                                    <span t-field="line.name"/>
+                                                </td>
+                                                <t t-set="current_section" t-value="line"/>
+                                                <t t-set="current_subtotal" t-value="0"/>
+                                            </t>
+                                            <t t-elif="line.display_type == 'line_note'">
+                                                <t t-set="sira" t-value="sira"/>
+                                                <td name="td_note_line" colspan="99">
+                                                    <span t-field="line.name"/>
+                                                </td>
+                                            </t>
+
+
+
+                                        </tr>
+
+
+
+
+                                        <t t-if="current_section and (line_last or doc.order_line[line_index+1].display_type == 'line_section') and not line.is_downpayment">
+                                            <tr class="is-subtotal text-end">
+                                                <td name="td_section_subtotal" colspan="99">
+                                                    <strong class="mr16">Ara Toplam:</strong>
+                                                    <!--                                                      <span style="font-weight: bold;"-->
+                                                    <!--                                                            t-esc="current_section.name"-->
+                                                    <!--                                                    />-->
+                                                    <!--                                                     <strong class="mr16"> Toplamı</strong>-->
+                                                    <span
+                                                            t-out="current_subtotal"
+                                                            t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'
+                                                    />
+                                                </td>
+
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+
+
+
+<!--                            <div class="row" style="margin-top:30px;">-->
+<!--                                <div class="col-12">-->
+<!--                                    <table class="table table-sm table-bordered">-->
+<!--                                        <thead>-->
+<!--                                            <tr style="background-color:#191970;color:white">-->
+<!--                                                <th class="col-1 text-center text-white text-capitalize">sr.no</th>-->
+<!--                                                <th class="col-2 text-center text-white text-capitalize">Sipariş No:</th>-->
+<!--                                                <th class="col-5 text-center text-white text-capitalize"> Açıklama </th>-->
+<!--                                                <th class="col-1 text-center text-white text-capitalize"> Birim </th>-->
+<!--                                                <th class="col-1 text-center text-white text-capitalize">Miktar</th>-->
+<!--                                                <th class="col-2 text-center text-white text-capitalize">Birim Fiyat</th>-->
+<!--                                                &lt;!&ndash;                                                <th class="text-center text-white text-capitalize">vergiler  </th>&ndash;&gt;-->
+<!--                                                <th class="col-2 text-center text-white text-capitalize">Toplam Fiyat </th>-->
+<!--                                            </tr>-->
+<!--                                        </thead>-->
+<!--                                        <tbody>-->
+<!--                                            <t t-set="counter" t-value="1"/>-->
+<!--                                            <t t-set="total_price" t-value="0"/>-->
+<!--                                            <tr t-foreach="doc.order_line" t-as="line" class="text-center">-->
+<!--                                                <td>-->
+<!--                                                    <span t-esc="counter"/>-->
+<!--                                                </td>-->
+<!--                                                <td class="text-left">-->
+<!--                                                    <span t-field="line.product_template_id"/>-->
+<!--                                                </td>-->
+<!--                                                <td class="text-left">-->
+<!--                                                    <span t-field="line.product_id.description_sale"/>-->
+<!--                                                </td>-->
+<!--                                                <td>-->
+<!--                                                    <span t-field="line.product_uom"/>-->
+<!--                                                </td>-->
+<!--                                                <td>-->
+<!--                                                    <span t-field="line.product_uom_qty"/>-->
+<!--                                                </td>-->
+<!--                                                <td>-->
+<!--                                                    <span t-field="line.price_unit"/>-->
+<!--                                                </td>-->
+<!--                                                &lt;!&ndash;                                                <td>&ndash;&gt;-->
+<!--                                                &lt;!&ndash;                                                    <t t-esc="line.tax_id.amount"/>&ndash;&gt;-->
+<!--                                                &lt;!&ndash;                                                </td>&ndash;&gt;-->
+<!--                                                <td>-->
+<!--                                                    <span t-esc="'{0:,.2f}'.format(line.price_subtotal)" /> <t t-esc="doc.currency_id.symbol"/>-->
+<!--                                                    <t t-set="total_price" t-value="total_price + line.price_subtotal"/>-->
+<!--                                                </td>-->
+<!--                                                <t t-set="counter" t-value="counter+1"/>-->
+<!--                                            </tr>-->
+<!--                                        </tbody>-->
+<!--                                    </table>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+                            <br/>
+                            <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
+                            <t t-set="display_discount" t-value="any(l.discount for l in lines_to_report)"/>
+                            <div class="clearfix" name="so_total_summary">
+                                <div id="total" class="row" name="total">
+                                    <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
+                                        <table class="table table-sm">
+                                            <!-- Tax totals -->
+                                            <t t-set="tax_totals" t-value="doc.tax_totals"/>
+                                            <t t-call="account.document_tax_totals"/>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-12" style="margin-top:50px;">
+                                <h5>
+                                    <span>
+                                        Müşteri Onayı:
+                                    </span>
+                                    <b>
+                                        Teklifimizi kabul ettiyseniz onaylayarak geri yollayınız
+                                    </b>
+                                </h5>
+                            </div>
+                            <div style="border:1px solid; margin-top:10px; padding:10px">
+
+                                <div class="row col-12">
+                                    <div class="col-12">
+                                        MES MÜHENDİSLİK ELEKTRİK ELEKTRONİK PROJE VE KON. SİSTEMLERİ
+                                    </div>
+                                </div>
+                                <div class="row col-12">
+                                    <div class="col-12">
+                                        tarafından yukarıda belirtilen şartlarda siparişini onaylıyorum.
+                                    </div>
+                                </div>
+                                <div class="row col-12" style="margin-top:10px;">
+                                    <div class="col-4">
+                                        Onaylayan Kişi
+                                    </div>
+                                    <div class="col-4"/>
+                                    <div class="col-4">
+                                        Kaşe \ İmza
+                                    </div>
+                                </div>
+
+                                <br/>
+                                <br/>
+                                <div class="row col-12">
+                                    <div class="col-4">
+                                        Onay Tarihi
+                                    </div>
+                                    <div class="col-4"/>
+                                    <div class="col-4">
+                                        Adı Soyad
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="row col-12" >
+                                    <div class="col-12">
+                                        Lütfen İmza Sirkünüzü sipariş onayı ekinde gönderiniz.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_saleorder">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
+                </t>
+            </t>
+        </template>
+
+        <record id="sale_order_report_paperformat" model="report.paperformat">
+            <field name="name">Customized Paper Format</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">297</field>
+            <field name="page_width">210</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">30</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">22</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <!--    <record id="paperformat_fhs_contrato_encomienda"  model="report.paperformat">-->
+        <!--            <field name="name">European A4 Landscape</field>-->
+        <!--            <field name="default" eval="True"/>-->
+        <!--            <field name="format">A4</field>-->
+        <!--            <field name="page_height">0</field>-->
+        <!--            <field name="page_width">0</field>-->
+        <!--            <field name="orientation">Portrait</field>-->
+        <!--            <field name="margin_top">10</field>-->
+        <!--            <field name="margin_bottom">13</field>-->
+        <!--            <field name="margin_left">7</field>-->
+        <!--            <field name="margin_right">7</field>-->
+        <!--            <field name="header_line" eval="False"/>-->
+        <!--            <field name="header_spacing">15</field>-->
+        <!--            <field name="dpi">90</field>-->
+        <!--        </record>-->
+
+
+        <record id="report_sale_order_id" model="ir.actions.report">
+            <field name="name">Sale Order</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">sale_order_report.report_sale_order_template</field>
+            <field name="report_file">sale_order_report.report_sale_order_template</field>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="sale_order_report.sale_order_report_paperformat"/>
+        </record>
+
+    </data>
+</odoo>

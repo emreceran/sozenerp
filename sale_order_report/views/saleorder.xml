@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="sale_order_form_inherit_view">
+        <field name="name">sale.order.form.inherit </field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='other_information']" position="after">
+                <page string='Satış Formu Bilgileri'>
+
+
+                    <group  string="dfdfd">
+                        <field name="proje_adi">Proje Adısdsd </field>
+                        <field name="satis_siprais_basligi" />
+
+
+
+                        <field  name="kapsam" style="white-space: normal;word-break: break-word;"/>
+
+
+
+                    </group>
+                    <group string="Dahili Hizmetler">
+                        <field name="dahil1" string="Dahil Hizmet 1"/>
+                        <field name="dahil2" string="Dahil Hizmet 2"/>
+                        <field name="dahil3" string="Dahil Hizmet 3"/>
+                        <field name="dahil4" string="Dahil Hizmet 4"/>
+                        <field name="dahil5" string="Dahil Hizmet 5"/>
+                        <field name="dahil6" string="Dahil Hizmet 6"/>
+
+
+                    </group>
+
+                    <group string="Harici Hizmetler">
+
+                        <field name="haric1" string="Harici Hizmet 1"/>
+                        <field name="haric2" string="Harici Hizmet 2"/>
+                        <field name="haric3" string="Harici Hizmet 3"/>
+                        <field name="haric4" string="Harici Hizmet 4"/>
+                        <field name="haric5" string="Harici Hizmet 5"/>
+                        <field name="haric6" string="Harici Hizmet 6"/>
+                        <field name="haric7" string="Harici Hizmet 7"/>
+                        <field name="haric8" string="Harici Hizmet 8"/>
+                        <field name="haric9" string="Harici Hizmet 9"/>
+                        <field name="haric10" string="Harici Hizmet 10"/>
+                        <field name="haric11" string="Harici Hizmet 11"/>
+                    </group>
+
+                    <group>
+                        <field name="opsiyon" string="OPSİYON"/>
+                        <field name="teslim_yeri" string="TESLİM YERİ"/>
+                        <field name="teslim_suresi" string="TESLİM SÜRESİ"/>
+                        <field name="fatura" string="FATURA"/>
+                        <field name="avans_ve_sartlar" string="AVANS VE ÖDEME ŞARTLARI"/>
+                        <field name="garanti" string="GARANTİ"/>
+                        <field name="force_major" string="FORCE MAJOR"/>
+                        <field name="vergi_mevzuat" string="VERGİ MEVZUATI"/>
+                        <field name="mukavele" string="MUKAVELE VE TEMİNAT MASRAFLARI"/>
+                        <field name="dolayli_zarar" string="DOLAYLI ZARARLAR"/>
+                        <field name="sorumluluk" string="SORUMLULUK"/>
+                        <field name="ihtilaflar" string="İHTİLAFLARIN GİDERİLMESİ"/>
+
+                    </group>
+
+
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+
+
+
+
+
+
+
+
+
+
+</odoo>
